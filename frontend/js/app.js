@@ -6,8 +6,9 @@ let currentData = null;
 let sunChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
-    // Step 1: Get user location
-    const loc = await getLocation();
+    try {
+        // Step 1: Get user location
+        const loc = await getLocation();
     currentLat = loc.lat;
     currentLon = loc.lon;
 
@@ -62,6 +63,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.getElementById('drone-select').value = this.value;
         if (currentData) renderDroneViewForToday(currentData);
     });
+    } catch (e) {
+        console.error('Init error:', e);
+        document.getElementById('error-msg').textContent = 'App failed to initialize: ' + e.message;
+        document.getElementById('error').style.display = 'flex';
+        document.getElementById('loading').style.display = 'none';
+    }
 });
 
 async function fetchAndRender(lat, lon) {
@@ -202,6 +209,13 @@ function updatePhaseBadge(today) {
 function renderSunChart(today) {
     const canvas = document.getElementById('sunChart');
     if (!canvas) return;
+
+    // Guard: Chart.js may not be loaded
+    if (typeof Chart === 'undefined') {
+        canvas.parentElement.innerHTML =
+            '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">☀️ Sun chart unavailable offline</div>';
+        return;
+    }
 
     if (sunChartInstance) {
         sunChartInstance.destroy();

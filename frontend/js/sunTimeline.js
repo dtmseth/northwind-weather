@@ -1,5 +1,11 @@
 
 window.renderTimeline = function(sunData, hourlyData) {
+    // Guard: SunCalc may not be loaded
+    if (typeof SunCalc === 'undefined') {
+        document.getElementById('timeline-bar').innerHTML =
+            '<div style="padding:8px;text-align:center;color:var(--text-muted);font-size:12px">Timeline unavailable offline</div>';
+        return;
+    }
     const timelineBar = document.getElementById('timeline-bar');
     const timelineLabels = document.getElementById('timeline-labels');
     const timelineDetails = document.getElementById('timeline-details');

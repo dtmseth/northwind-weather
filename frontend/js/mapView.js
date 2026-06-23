@@ -8,9 +8,11 @@ let sunArcs = [];
 window.initMap = function(lat, lon, callback) {
     onLocationChange = callback;
 
-    // Wait for Leaflet
+    // Guard: Leaflet might not have loaded
     if (typeof L === 'undefined') {
-        console.error('Leaflet not loaded');
+        console.warn('Leaflet not loaded — map unavailable');
+        document.getElementById('map').innerHTML =
+            '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">🗺️ Map unavailable offline</div>';
         return;
     }
 
