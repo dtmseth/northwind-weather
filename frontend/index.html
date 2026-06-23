@@ -10,7 +10,6 @@
     <link rel="apple-touch-icon" href="img/icon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.min.css">
 </head>
 <body>
     <div id="app">
@@ -200,10 +199,10 @@
         </main>
     </div>
 
-    <!-- Libs (deferred so they don't block app JS) -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+    <!-- Libs (SunCalc local to avoid CDN failure risk) -->
+    <script src="js/lib/suncalc.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" async></script>
 
     <!-- App -->
     <script src="js/utils.js"></script>
