@@ -5,6 +5,19 @@ let currentLon = null;
 let currentData = null;
 let sunChartInstance = null;
 
+// Global error catcher — shows JS errors on screen for diagnosis
+window.onerror = function(msg, url, line, col, err) {
+    const loading = document.getElementById('loading');
+    const errorEl = document.getElementById('error');
+    const msgEl = document.getElementById('error-msg');
+    if (loading) loading.style.display = 'none';
+    if (errorEl && msgEl) {
+        msgEl.textContent = 'JS Error: ' + (err ? err.message : msg) + ' at ' + (url || '') + ':' + line;
+        errorEl.style.display = 'flex';
+    }
+    return false;
+};
+
 document.addEventListener('DOMContentLoaded', async function() {
     try {
         // Step 1: Get user location
