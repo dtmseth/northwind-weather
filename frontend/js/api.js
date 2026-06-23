@@ -37,14 +37,26 @@ async function geocode(query) {
 
 function getLocation() {
     return new Promise((resolve) => {
+        // Hard timeout: resolve with default if geolocation hangs (common on iOS)
+        const timeout = setTimeout(() => {
+            resolve({ lat: 47.6062, lon: -122.3321, name: 'Seattle' });
+        }, 5000);
+
         if (!navigator.geolocation) {
-            resolve({ lat: 47.6062, lon: -122.3321, name: 'Seattle' }); // default
+            clearTimeout(timeout);
+            resolve({ lat: 47.6062, lon: -122.3321, name: 'Seattle' });
             return;
         }
         navigator.geolocation.getCurrentPosition(
-            (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude, name: 'Current Location' }),
-            () => resolve({ lat: 47.6062, lon: -122.3321, name: 'Seattle' }),
-            { timeout: 8000, enableHighAccuracy: false }
+            (pos) => {
+                clearTimeout(timeout);
+                resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude, name: 'Current Location' });
+            },
+            () => {
+                clearTimeout(timeout);
+                resolve({ lat: 47.6062, lon: -122.3321, name: 'Seattle' });
+            },
+            { timeout: 4000, enableHighAccuracy: false }
         );
     });
 }
