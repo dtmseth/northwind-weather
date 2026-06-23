@@ -615,6 +615,28 @@ body {
     margin-top: 16px;
 }
 
+.footer-logo {
+    height: 48px;
+    margin-bottom: 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.footer-logo:hover { opacity: 1; }
+
+.footer a {
+    color: var(--accent-gold);
+    text-decoration: none;
+}
+
+.footer a:hover { text-decoration: underline; }
+
+.footer-credits {
+    font-size: 11px;
+    margin-top: 4px;
+    color: var(--text-muted);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
