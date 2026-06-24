@@ -18,10 +18,21 @@ window.onerror = function(msg, url, line, col, err) {
     return false;
 };
 
+// Diagnostics helper — writes to page so user can see execution progress
+function diag(msg) {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#333;color:#0ff;text-align:center;padding:3px;font:11px monospace;border-top:1px solid #555';
+    d.textContent = '🔄 ' + msg;
+    document.body.appendChild(d);
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
     try {
+        diag('init started');
         // Step 1: Get user location
+        diag('getLocation START');
         const loc = await getLocation();
+        diag('getLocation DONE: ' + loc.lat + ',' + loc.lon);
     currentLat = loc.lat;
     currentLon = loc.lon;
 
@@ -33,7 +44,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     initMap(currentLat, currentLon, onMapLocationChange);
 
     // Step 2: Fetch and render
+    diag('fetchAndRender START');
     await fetchAndRender(currentLat, currentLon);
+    diag('fetchAndRender DONE');
 
     // Step 3: Location input
     document.getElementById('location-input').addEventListener('keydown', async function(e) {
@@ -85,18 +98,23 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 async function fetchAndRender(lat, lon) {
+    diag('fetchAndRender: showing loading');
     document.getElementById('loading').style.display = 'block';
     document.getElementById('error').style.display = 'none';
 
     try {
+        diag('fetchForecast CALL');
         const data = await fetchForecast(lat, lon, 7);
+        diag('fetchForecast DONE, calling renderAll');
         currentData = data;
         currentLat = lat;
         currentLon = lon;
 
         renderAll(data);
+        diag('renderAll DONE, hiding loading');
         document.getElementById('loading').style.display = 'none';
     } catch (err) {
+        diag('ERROR: ' + err.message);
         showError('Failed to fetch weather data: ' + err.message);
         document.getElementById('loading').style.display = 'none';
     }
