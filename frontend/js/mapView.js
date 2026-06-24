@@ -26,6 +26,9 @@ window.initMap = function(lat, lon, callback) {
         attributionControl: false,
     });
 
+    // Store globally so router can call invalidateSize when page becomes visible
+    window._mapInstance = map;
+
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
     }).addTo(map);

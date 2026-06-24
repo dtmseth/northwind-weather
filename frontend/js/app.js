@@ -5,13 +5,10 @@ let currentLon = null;
 let currentData = null;
 let sunChartInstance = null;
 
-// Global error catcher — log to console for diagnosis
-window.onerror = function(msg, url, line, col, err) {
-    console.error('Uncaught error:', err || msg, 'at', (url || '') + ':' + line);
-    return false;
-};
-
 function initApp() {
+    // Init router first
+    if (window.initRouter) initRouter();
+
     // Step 1: Get user location
     getLocation().then(function(loc) {
         currentLat = loc.lat;
