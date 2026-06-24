@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from fastapi import APIRouter
 import httpx
 
@@ -85,14 +87,34 @@ async def _fetch_metar(ids: str) -> dict | None:
         "clouds": [],
     }
 
-    # Parse cloud layers
-    raw_clouds = raw_metar.get("cloud", [])
-    for cl in raw_clouds if raw_clouds else []:
+    # Parse cloud layers.
+    # AviationWeather.gov returns the layer array under "clouds" (each with
+    # "cover" + "base" in ft AGL). It does NOT include a genus/type field —
+    # CB/TCU only appear as a suffix in the raw METAR, so parse those out.
+    raw_clouds = raw_metar.get("clouds") or raw_metar.get("cloud") or []
+    cb_types = _parse_cloud_types(raw_metar.get("rawOb", ""))
+    for cl in raw_clouds:
+        cover = cl.get("cover")
+        base = cl.get("base")
         parsed["clouds"].append({
-            "cover": cl.get("cover"),
-            "base_ft_agl": cl.get("base"),
-            "type": cl.get("type"),
+            "cover": cover,
+            "base_ft_agl": base,
+            # Significant convective type when reported, else None.
+            "type": cl.get("type") or cb_types.get(base),
         })
 
     cache.set(cache_key, parsed, ttl=600)  # 10 min
     return parsed
+
+
+# Matches cloud tokens like "BKN040CB", "SCT025TCU", "FEW065", "OVC008".
+_CLOUD_TOKEN = re.compile(r"\b(FEW|SCT|BKN|OVC|VV)(\d{3})(CB|TCU)?\b")
+
+
+def _parse_cloud_types(raw: str) -> dict[int, str]:
+    """Extract significant convective cloud types (CB/TCU) keyed by base ft AGL."""
+    types: dict[int, str] = {}
+    for _cover, hundreds, suffix in _CLOUD_TOKEN.findall(raw or ""):
+        if suffix:
+            types[int(hundreds) * 100] = suffix
+    return types

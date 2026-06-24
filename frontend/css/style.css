@@ -420,6 +420,82 @@ body {
 .cloud-layer.nimbus { background: rgba(80, 80, 100, 0.7); }
 .cloud-layer.convective { background: rgba(100, 100, 140, 0.8); }
 
+/* Cloud current/hourly toggle */
+.cloud-toggle {
+    display: inline-flex;
+    gap: 2px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+}
+
+.cloud-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: calc(var(--radius-sm) - 2px);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cloud-toggle button.active {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--text-primary);
+}
+
+.cloud-empty {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Hourly cloud-cover bar chart */
+.cloud-hourly {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 1px;
+    padding: 4px 4px 0;
+}
+
+.cloud-hour-col {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.cloud-hour-bar {
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+    min-height: 2px;
+}
+
+.cloud-hour-tick {
+    font-size: 8px;
+    text-align: center;
+    color: var(--text-muted);
+    height: 12px;
+    line-height: 12px;
+}
+
+.cloud-hour-bar.cumulus { background: rgba(255, 255, 255, 0.6); }
+.cloud-hour-bar.stratus { background: rgba(150, 150, 170, 0.6); }
+.cloud-hour-bar.cirrus { background: rgba(200, 200, 220, 0.4); }
+.cloud-hour-bar.nimbus { background: rgba(80, 80, 110, 0.85); }
+.cloud-hour-bar.convective { background: rgba(100, 100, 140, 0.9); }
+
 .cloud-legend {
     display: flex;
     gap: 8px;
@@ -427,6 +503,21 @@ body {
     font-size: 11px;
     color: var(--text-secondary);
 }
+
+.cloud-legend-color {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
+.cloud-legend-color.cumulus { background: rgba(255, 255, 255, 0.6); }
+.cloud-legend-color.stratus { background: rgba(150, 150, 170, 0.6); }
+.cloud-legend-color.cirrus { background: rgba(200, 200, 220, 0.4); }
+.cloud-legend-color.nimbus { background: rgba(80, 80, 110, 0.85); }
+.cloud-legend-color.convective { background: rgba(100, 100, 140, 0.9); }
 
 .cloud-legend span {
     padding: 2px 6px;
@@ -562,6 +653,16 @@ body {
 }
 
 .drone-stat span:first-child { color: var(--text-muted); }
+
+.wind-source {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
 
 .drone-tips {
     grid-column: 1 / -1;

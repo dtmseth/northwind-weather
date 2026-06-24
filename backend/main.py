@@ -74,6 +74,9 @@ async def combined_forecast(lat: float, lon: float, days: int = 7):
             "daily": "sunrise,sunset,sunshine_duration,precipitation_sum",
             "timezone": "auto",
             "forecast_days": days,
+            # Return wind in m/s so values match the frontend drone limits
+            # (Open-Meteo defaults to km/h, which the UI mislabels as m/s).
+            "wind_speed_unit": "ms",
         }
         weather_resp = await client.get(
             "https://api.open-meteo.com/v1/forecast", params=weather_params

@@ -5,33 +5,15 @@ let currentLon = null;
 let currentData = null;
 let sunChartInstance = null;
 
-// Global error catcher — shows JS errors on screen for diagnosis
+// Global error catcher — log to console for diagnosis
 window.onerror = function(msg, url, line, col, err) {
-    const loading = document.getElementById('loading');
-    const errorEl = document.getElementById('error');
-    const msgEl = document.getElementById('error-msg');
-    if (loading) loading.style.display = 'none';
-    if (errorEl && msgEl) {
-        msgEl.textContent = 'JS Error: ' + (err ? err.message : msg) + ' at ' + (url || '') + ':' + line;
-        errorEl.style.display = 'flex';
-    }
+    console.error('Uncaught error:', err || msg, 'at', (url || '') + ':' + line);
     return false;
 };
 
-// Diagnostics helper — writes to page so user can see execution progress
-function diag(msg) {
-    var d = document.createElement('div');
-    d.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#333;color:#0ff;text-align:center;padding:3px;font:11px monospace;border-top:1px solid #555';
-    d.textContent = '🔄 ' + msg;
-    document.body.appendChild(d);
-}
-
 function initApp() {
-    diag('init started');
     // Step 1: Get user location
-    diag('getLocation START');
     getLocation().then(function(loc) {
-        diag('getLocation DONE: ' + loc.lat + ',' + loc.lon);
         currentLat = loc.lat;
         currentLon = loc.lon;
 
@@ -43,7 +25,6 @@ function initApp() {
         initMap(currentLat, currentLon, onMapLocationChange);
 
         // Step 2: Fetch and render
-        diag('fetchAndRender START');
         fetchAndRender(currentLat, currentLon);
 
         // Step 3: Location input with autocomplete
@@ -154,7 +135,6 @@ function initApp() {
             });
         }
     }).catch(function(e) {
-        diag('ERROR: ' + e.message);
         console.error('Init error:', e);
         document.getElementById('error-msg').textContent = 'App failed to initialize: ' + e.message;
         document.getElementById('error').style.display = 'flex';
@@ -163,27 +143,21 @@ function initApp() {
 }
 
 // Run immediately — scripts are at bottom of <body>, all DOM elements exist
-diag('app.js loaded, starting initApp()');
 initApp();
 
 async function fetchAndRender(lat, lon) {
-    diag('fetchAndRender: showing loading');
     document.getElementById('loading').style.display = 'block';
     document.getElementById('error').style.display = 'none';
 
     try {
-        diag('fetchForecast CALL');
         const data = await fetchForecast(lat, lon, 7);
-        diag('fetchForecast DONE, calling renderAll');
         currentData = data;
         currentLat = lat;
         currentLon = lon;
 
         renderAll(data);
-        diag('renderAll DONE, hiding loading');
         document.getElementById('loading').style.display = 'none';
     } catch (err) {
-        diag('ERROR: ' + err.message);
         showError('Failed to fetch weather data: ' + err.message);
         document.getElementById('loading').style.display = 'none';
     }
@@ -265,7 +239,8 @@ function renderDroneViewForToday(todayOrData) {
         : (currentData && currentData.daily && currentData.daily[0]);
     if (!today || !window.renderDroneView) return;
     const model = document.getElementById('drone-select').value;
-    renderDroneView(today.hourly, model);
+    const metar = today.metar && today.metar.latest;
+    renderDroneView(today.hourly, model, metar);
 }
 
 function updatePhaseBadge(today) {

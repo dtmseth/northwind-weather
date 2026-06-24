@@ -49,6 +49,7 @@ async def get_weather(lat: float, lon: float, days: int = 7):
         "daily": "sunrise,sunset,sunshine_duration,precipitation_sum",
         "timezone": "auto",
         "forecast_days": days,
+        "wind_speed_unit": "ms",
     }
 
     async with httpx.AsyncClient(timeout=15) as client:
