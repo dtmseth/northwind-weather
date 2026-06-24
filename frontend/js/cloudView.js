@@ -1,39 +1,4 @@
 
-// Assume these are imported or defined globally from utils.js
-const COVER_FACTOR = {
-    "FEW": 0.2,
-    "SCT": 0.4,
-    "BKN": 0.7,
-    "OVC": 1.0,
-    "VV": 1.0 // Vertical visibility, often treated as overcast for cloud rendering
-};
-
-const CLOUD_TYPE_NAMES = {
-    "CU": "Cumulus",
-    "TCU": "Towering Cumulus",
-    "SC": "Stratocumulus",
-    "ST": "Stratus",
-    "CI": "Cirrus",
-    "CS": "Cirrostratus",
-    "CC": "Cirrocumulus",
-    "NS": "Nimbostratus",
-    "CB": "Cumulonimbus",
-    "VV": "Vertical Visibility" // For low visibility, not a cloud type but included for completeness
-};
-
-const CLOUD_TYPE_CLASS = {
-    "CU": "cumulus",
-    "TCU": "convective", // Often shown as convective
-    "SC": "stratus",
-    "ST": "stratus",
-    "CI": "cirrus",
-    "CS": "cirrus",
-    "CC": "cirrus",
-    "NS": "nimbus",
-    "CB": "convective",
-    "VV": "nimbus" // A proxy for very low visibility/overcast
-};
-
 window.renderClouds = function(metarData, hourlyData, containerId = "cloud-diagram") {
     const container = document.getElementById(containerId);
     if (!container) {

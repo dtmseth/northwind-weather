@@ -2,11 +2,11 @@
 
 let map = null;
 let marker = null;
-let onLocationChange = null;
+let mapLocationCallback = null;
 let sunArcs = [];
 
 window.initMap = function(lat, lon, callback) {
-    onLocationChange = callback;
+    mapLocationCallback = callback;
 
     // Guard: Leaflet might not have loaded
     if (typeof L === 'undefined') {
@@ -36,12 +36,12 @@ window.initMap = function(lat, lon, callback) {
 
     marker.on('dragend', function() {
         const pos = marker.getLatLng();
-        if (onLocationChange) onLocationChange(pos.lat, pos.lng);
+        if (mapLocationCallback) mapLocationCallback(pos.lat, pos.lng);
     });
 
     map.on('click', function(e) {
         marker.setLatLng(e.latlng);
-        if (onLocationChange) onLocationChange(e.latlng.lat, e.latlng.lng);
+        if (mapLocationCallback) mapLocationCallback(e.latlng.lat, e.latlng.lng);
     });
 };
 
