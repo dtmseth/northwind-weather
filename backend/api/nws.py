@@ -73,11 +73,13 @@ async def get_radar():
             resp.raise_for_status()
             data = resp.json()
     except Exception:
-        return {"past": [], "nowcast": []}
+        return {"host": "", "past": [], "nowcast": []}
 
+    # RainViewer response has radar.past / radar.nowcast nested under "radar", plus a "host" field
     result = {
-        "past": data.get("past", []),
-        "nowcast": data.get("nowcast", []),
+        "host": data.get("host", ""),
+        "past": data.get("radar", {}).get("past", []),
+        "nowcast": data.get("radar", {}).get("nowcast", []),
     }
 
     cache.set(cache_key, result, ttl=300)  # 5 min
