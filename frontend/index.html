@@ -10,8 +10,8 @@
     <link rel="apple-touch-icon" href="img/icon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- Boot diagnostic — must be first JS to execute -->
-    <script src="js/boot.js"></script>
+    <!-- Boot diagnostic — inline to prove JS is running -->
+    <script>document.write('<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#ff4444;color:#fff;text-align:center;padding:8px;font:14px monospace">JS BOOT OK: inline script executed at '+new Date().toLocaleTimeString()+'</div>');</script>
 </head>
 <body>
     <div id="app">
