@@ -26,76 +26,91 @@ function diag(msg) {
     document.body.appendChild(d);
 }
 
-document.addEventListener('DOMContentLoaded', async function() {
-    try {
-        diag('init started');
-        // Step 1: Get user location
-        diag('getLocation START');
-        const loc = await getLocation();
+function initApp() {
+    diag('init started');
+    // Step 1: Get user location
+    diag('getLocation START');
+    getLocation().then(function(loc) {
         diag('getLocation DONE: ' + loc.lat + ',' + loc.lon);
-    currentLat = loc.lat;
-    currentLon = loc.lon;
+        currentLat = loc.lat;
+        currentLon = loc.lon;
 
-    // Update location display
-    document.getElementById('today-location').textContent = loc.name || `${loc.lat.toFixed(2)}, ${loc.lon.toFixed(2)}`;
-    document.getElementById('today-date').textContent = formatDate(new Date().toISOString());
+        // Update location display
+        document.getElementById('today-location').textContent = loc.name || loc.lat.toFixed(2) + ', ' + loc.lon.toFixed(2);
+        document.getElementById('today-date').textContent = formatDate(new Date().toISOString());
 
-    // Init map
-    initMap(currentLat, currentLon, onMapLocationChange);
+        // Init map
+        initMap(currentLat, currentLon, onMapLocationChange);
 
-    // Step 2: Fetch and render
-    diag('fetchAndRender START');
-    await fetchAndRender(currentLat, currentLon);
-    diag('fetchAndRender DONE');
+        // Step 2: Fetch and render
+        diag('fetchAndRender START');
+        fetchAndRender(currentLat, currentLon);
 
-    // Step 3: Location input
-    document.getElementById('location-input').addEventListener('keydown', async function(e) {
-        if (e.key === 'Enter') {
-            const q = this.value.trim();
-            if (!q) return;
-            // Try parsing as lat,lon
-            const parts = q.split(',').map(s => parseFloat(s.trim()));
-            if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-                await onLocationChange(parts[0], parts[1]);
-                return;
-            }
-            // Geocode
-            document.getElementById('loading').style.display = 'block';
-            const result = await geocode(q);
-            if (result) {
-                document.getElementById('today-location').textContent = result.name;
-                await onLocationChange(result.lat, result.lon);
-            } else {
-                showError('Location not found. Try "City, State" or "lat, lon"');
-            }
-            document.getElementById('loading').style.display = 'none';
+        // Step 3: Location input
+        var locInput = document.getElementById('location-input');
+        if (locInput) {
+            locInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    var q = this.value.trim();
+                    if (!q) return;
+                    var parts = q.split(',').map(function(s) { return parseFloat(s.trim()); });
+                    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                        onLocationChange(parts[0], parts[1]);
+                        return;
+                    }
+                    document.getElementById('loading').style.display = 'block';
+                    geocode(q).then(function(result) {
+                        if (result) {
+                            document.getElementById('today-location').textContent = result.name;
+                            onLocationChange(result.lat, result.lon);
+                        } else {
+                            showError('Location not found. Try "City, State" or "lat, lon"');
+                        }
+                        document.getElementById('loading').style.display = 'none';
+                    });
+                }
+            });
         }
-    });
 
-    document.getElementById('locate-btn').addEventListener('click', async function() {
-        document.getElementById('loading').style.display = 'block';
-        const loc = await getLocation();
-        document.getElementById('today-location').textContent = 'Current Location';
-        await onLocationChange(loc.lat, loc.lon);
-        document.getElementById('loading').style.display = 'none';
-    });
+        var locateBtn = document.getElementById('locate-btn');
+        if (locateBtn) {
+            locateBtn.addEventListener('click', function() {
+                document.getElementById('loading').style.display = 'block';
+                getLocation().then(function(loc) {
+                    document.getElementById('today-location').textContent = 'Current Location';
+                    onLocationChange(loc.lat, loc.lon);
+                    document.getElementById('loading').style.display = 'none';
+                });
+            });
+        }
 
-    // Drone model selector sync
-    document.getElementById('drone-select').addEventListener('change', function() {
-        document.getElementById('drone-select-large').value = this.value;
-        if (currentData) renderDroneViewForToday(currentData);
-    });
-    document.getElementById('drone-select-large').addEventListener('change', function() {
-        document.getElementById('drone-select').value = this.value;
-        if (currentData) renderDroneViewForToday(currentData);
-    });
-    } catch (e) {
+        // Drone model selector sync
+        var droneSel = document.getElementById('drone-select');
+        var droneSelLarge = document.getElementById('drone-select-large');
+        if (droneSel) {
+            droneSel.addEventListener('change', function() {
+                if (droneSelLarge) droneSelLarge.value = this.value;
+                if (currentData) renderDroneViewForToday(currentData);
+            });
+        }
+        if (droneSelLarge) {
+            droneSelLarge.addEventListener('change', function() {
+                if (droneSel) droneSel.value = this.value;
+                if (currentData) renderDroneViewForToday(currentData);
+            });
+        }
+    }).catch(function(e) {
+        diag('ERROR: ' + e.message);
         console.error('Init error:', e);
         document.getElementById('error-msg').textContent = 'App failed to initialize: ' + e.message;
         document.getElementById('error').style.display = 'flex';
         document.getElementById('loading').style.display = 'none';
-    }
-});
+    });
+}
+
+// Run immediately — scripts are at bottom of <body>, all DOM elements exist
+diag('app.js loaded, starting initApp()');
+initApp();
 
 async function fetchAndRender(lat, lon) {
     diag('fetchAndRender: showing loading');
