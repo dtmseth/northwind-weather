@@ -50,6 +50,7 @@
 
             <!-- PAGE: TODAY -->
             <div id="page-today" class="page active">
+                <div id="alerts-strip" class="alerts-strip" style="display:none"></div>
                 <section id="today-card" class="card">
                     <div class="card-header">
                         <h2 id="today-location">Loading...</h2>
@@ -166,6 +167,7 @@
                 <section id="map-section" class="card">
                     <div class="card-header">
                         <h2>Location</h2>
+                        <button id="radar-toggle-btn" class="radar-toggle-btn" onclick="window.addRadarOverlay()">Radar</button>
                     </div>
                     <div id="map" class="map-container"></div>
                 </section>

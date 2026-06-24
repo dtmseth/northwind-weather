@@ -4,6 +4,8 @@ let map = null;
 let marker = null;
 let mapLocationCallback = null;
 let sunArcs = [];
+let radarLayer = null;
+let radarOverlayActive = false;
 
 window.initMap = function(lat, lon, callback) {
     mapLocationCallback = callback;
@@ -106,5 +108,38 @@ window.drawSunArc = function(sunData) {
             dashArray: '5, 5',
         }).addTo(map);
         sunArcs.push(arc);
+    }
+};
+
+/* Radar overlay */
+window.addRadarOverlay = async function() {
+    const btn = document.getElementById('radar-toggle-btn');
+    if (!map) return;
+
+    if (radarOverlayActive) {
+        // Turn off
+        if (radarLayer) {
+            map.removeLayer(radarLayer);
+            radarLayer = null;
+        }
+        radarOverlayActive = false;
+        if (btn) btn.textContent = 'Radar';
+        return;
+    }
+
+    try {
+        if (btn) btn.textContent = '...';
+        const resp = await fetch('/api/nws/radar');
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (!data.past || data.past.length === 0) return;
+        const latest = data.past[data.past.length - 1];
+        const tileUrl = data.host + latest.path + '/256/{z}/{x}/{y}/2/1_1.png';
+        radarLayer = L.tileLayer(tileUrl, { opacity: 0.6, tileSize: 256 }).addTo(map);
+        radarOverlayActive = true;
+        if (btn) btn.textContent = 'Off';
+    } catch (err) {
+        console.warn('Radar overlay error:', err);
+        if (btn) btn.textContent = 'Radar';
     }
 };

@@ -836,3 +836,28 @@ body {
 #main-content {
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
+
+/* Alerts strip */
+.alerts-strip { margin-bottom: 12px; }
+.alert-item { padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-size: 13px; }
+.alert-item.severe { background: rgba(255,68,68,0.15); border: 1px solid #ff4444; color: #ff6666; }
+.alert-item.moderate { background: rgba(255,140,0,0.15); border: 1px solid #ff8c00; color: #ffaa44; }
+.alert-item.minor { background: rgba(255,215,0,0.1); border: 1px solid #ffd700; color: #ddbb33; }
+.alert-item .alert-event { font-weight: 700; }
+.alert-item .alert-area { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+/* Radar toggle button */
+.radar-toggle-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.radar-toggle-btn:hover { background: rgba(255,255,255,0.15); }

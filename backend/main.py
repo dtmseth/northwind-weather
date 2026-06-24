@@ -20,6 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import httpx
 
+from api.nws import router as nws_router
 from api.openmeteo import router as weather_router
 from api.aqi import router as aqi_router
 from api.metar import router as metar_router, _fetch_metar
@@ -42,6 +43,7 @@ app.add_middleware(
 app.include_router(weather_router)
 app.include_router(aqi_router)
 app.include_router(metar_router)
+app.include_router(nws_router)
 
 
 @app.get("/api/health")

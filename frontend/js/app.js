@@ -153,6 +153,11 @@ async function fetchAndRender(lat, lon) {
         currentLon = lon;
 
         renderAll(data);
+
+        // Fetch and render NWS alerts
+        const alerts = await fetchNwsAlerts(lat, lon);
+        renderAlerts(alerts);
+
         document.getElementById('loading').style.display = 'none';
     } catch (err) {
         showError('Failed to fetch weather data: ' + err.message);
@@ -464,4 +469,36 @@ function showError(msg) {
         msgEl.textContent = msg;
         err.style.display = 'flex';
     }
+}
+
+function renderAlerts(alerts) {
+    const strip = document.getElementById('alerts-strip');
+    if (!strip) return;
+
+    if (!alerts || alerts.length === 0) {
+        strip.style.display = 'none';
+        return;
+    }
+
+    strip.innerHTML = alerts.map(function(a) {
+        var severity = (a.severity || '').toLowerCase();
+        var cls = 'minor';
+        if (severity === 'severe' || severity === 'extreme') cls = 'severe';
+        else if (severity === 'moderate') cls = 'moderate';
+
+        return '<div class="alert-item ' + cls + '">' +
+            '<div class="alert-event">⚠️ ' + escapeHtml(a.event || 'Alert') + '</div>' +
+            '<div class="alert-area">' + escapeHtml(a.area_desc || '') + '</div>' +
+            '</div>';
+    }).join('');
+    strip.style.display = 'block';
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
 }

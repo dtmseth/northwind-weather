@@ -72,3 +72,9 @@ function getLocation() {
         );
     });
 }
+
+async function fetchNwsAlerts(lat, lon) {
+    const resp = await fetch(`${API_BASE}/nws/alerts?lat=${lat}&lon=${lon}`);
+    if (!resp.ok) return [];
+    return resp.json();
+}
