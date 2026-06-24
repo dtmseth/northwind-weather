@@ -27,19 +27,19 @@ window.renderTimeline = function(sunData, hourlyData) {
     // For now, focus on specific periods and fill night in between.
 
     // Blue Hour AM
-    if (sunData.blueHour_am_start && sunData.blueHour_am_end) {
+    if (sunData.blue_hour_am_start && sunData.blue_hour_am_end) {
         segments.push({
-            start: timeToFraction(new Date(sunData.blueHour_am_start)),
-            end: timeToFraction(new Date(sunData.blueHour_am_end)),
+            start: timeToFraction(new Date(sunData.blue_hour_am_start)),
+            end: timeToFraction(new Date(sunData.blue_hour_am_end)),
             color: 'var(--color-blue-hour-deep)'
         });
     }
 
     // Golden Hour AM
-    if (sunData.goldenHour_am_start && sunData.goldenHour_am_end) {
+    if (sunData.golden_hour_am_start && sunData.golden_hour_am_end) {
         segments.push({
-            start: timeToFraction(new Date(sunData.goldenHour_am_start)),
-            end: timeToFraction(new Date(sunData.goldenHour_am_end)),
+            start: timeToFraction(new Date(sunData.golden_hour_am_start)),
+            end: timeToFraction(new Date(sunData.golden_hour_am_end)),
             color: 'var(--color-golden-hour)'
         });
     }
@@ -54,19 +54,19 @@ window.renderTimeline = function(sunData, hourlyData) {
     }
 
     // Golden Hour PM
-    if (sunData.goldenHour_pm_start && sunData.goldenHour_pm_end) {
+    if (sunData.golden_hour_pm_start && sunData.golden_hour_pm_end) {
         segments.push({
-            start: timeToFraction(new Date(sunData.goldenHour_pm_start)),
-            end: timeToFraction(new Date(sunData.goldenHour_pm_end)),
+            start: timeToFraction(new Date(sunData.golden_hour_pm_start)),
+            end: timeToFraction(new Date(sunData.golden_hour_pm_end)),
             color: 'var(--color-golden-hour)'
         });
     }
 
     // Blue Hour PM
-    if (sunData.blueHour_pm_start && sunData.blueHour_pm_end) {
+    if (sunData.blue_hour_pm_start && sunData.blue_hour_pm_end) {
         segments.push({
-            start: timeToFraction(new Date(sunData.blueHour_pm_start)),
-            end: timeToFraction(new Date(sunData.blueHour_pm_end)),
+            start: timeToFraction(new Date(sunData.blue_hour_pm_start)),
+            end: timeToFraction(new Date(sunData.blue_hour_pm_end)),
             color: 'var(--color-blue-hour-deep)'
         });
     }
@@ -119,14 +119,14 @@ window.renderTimeline = function(sunData, hourlyData) {
     if (sunData.sunrise) keyTimes.push({ time: new Date(sunData.sunrise), label: 'Sunrise' });
     if (sunData.solar_noon) keyTimes.push({ time: new Date(sunData.solar_noon), label: 'Solar Noon' });
     if (sunData.sunset) keyTimes.push({ time: new Date(sunData.sunset), label: 'Sunset' });
-    if (sunData.goldenHour_am_start) keyTimes.push({ time: new Date(sunData.goldenHour_am_start), label: 'GH AM Start' });
-    if (sunData.goldenHour_am_end) keyTimes.push({ time: new Date(sunData.goldenHour_am_end), label: 'GH AM End' });
-    if (sunData.goldenHour_pm_start) keyTimes.push({ time: new Date(sunData.goldenHour_pm_start), label: 'GH PM Start' });
-    if (sunData.goldenHour_pm_end) keyTimes.push({ time: new Date(sunData.goldenHour_pm_end), label: 'GH PM End' });
-    if (sunData.blueHour_am_start) keyTimes.push({ time: new Date(sunData.blueHour_am_start), label: 'BH AM Start' });
-    if (sunData.blueHour_am_end) keyTimes.push({ time: new Date(sunData.blueHour_am_end), label: 'BH AM End' });
-    if (sunData.blueHour_pm_start) keyTimes.push({ time: new Date(sunData.blueHour_pm_start), label: 'BH PM Start' });
-    if (sunData.blueHour_pm_end) keyTimes.push({ time: new Date(sunData.blueHour_pm_end), label: 'BH PM End' });
+    if (sunData.golden_hour_am_start) keyTimes.push({ time: new Date(sunData.golden_hour_am_start), label: 'GH AM Start' });
+    if (sunData.golden_hour_am_end) keyTimes.push({ time: new Date(sunData.golden_hour_am_end), label: 'GH AM End' });
+    if (sunData.golden_hour_pm_start) keyTimes.push({ time: new Date(sunData.golden_hour_pm_start), label: 'GH PM Start' });
+    if (sunData.golden_hour_pm_end) keyTimes.push({ time: new Date(sunData.golden_hour_pm_end), label: 'GH PM End' });
+    if (sunData.blue_hour_am_start) keyTimes.push({ time: new Date(sunData.blue_hour_am_start), label: 'BH AM Start' });
+    if (sunData.blue_hour_am_end) keyTimes.push({ time: new Date(sunData.blue_hour_am_end), label: 'BH AM End' });
+    if (sunData.blue_hour_pm_start) keyTimes.push({ time: new Date(sunData.blue_hour_pm_start), label: 'BH PM Start' });
+    if (sunData.blue_hour_pm_end) keyTimes.push({ time: new Date(sunData.blue_hour_pm_end), label: 'BH PM End' });
 
     keyTimes.sort((a, b) => a.time.getTime() - b.time.getTime());
 
@@ -141,10 +141,10 @@ window.renderTimeline = function(sunData, hourlyData) {
 
     // --- Render Details Grid ---
     const detailsData = [
-        { label: 'Morning Golden Hour', start: sunData.goldenHour_am_start, end: sunData.goldenHour_am_end, cssClass: 'golden-hour-details' },
-        { label: 'Morning Blue Hour', start: sunData.blueHour_am_start, end: sunData.blueHour_am_end, cssClass: 'blue-hour-details' },
-        { label: 'Evening Golden Hour', start: sunData.goldenHour_pm_start, end: sunData.goldenHour_pm_end, cssClass: 'golden-hour-details' },
-        { label: 'Evening Blue Hour', start: sunData.blueHour_pm_start, end: sunData.blueHour_pm_end, cssClass: 'blue-hour-details' }
+        { label: 'Morning Golden Hour', start: sunData.golden_hour_am_start, end: sunData.golden_hour_am_end, cssClass: 'golden-hour-details' },
+        { label: 'Morning Blue Hour', start: sunData.blue_hour_am_start, end: sunData.blue_hour_am_end, cssClass: 'blue-hour-details' },
+        { label: 'Evening Golden Hour', start: sunData.golden_hour_pm_start, end: sunData.golden_hour_pm_end, cssClass: 'golden-hour-details' },
+        { label: 'Evening Blue Hour', start: sunData.blue_hour_pm_start, end: sunData.blue_hour_pm_end, cssClass: 'blue-hour-details' }
     ];
 
     detailsData.forEach(detail => {

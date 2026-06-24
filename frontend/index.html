@@ -26,7 +26,10 @@
             </div>
             <div class="header-right">
                 <div class="location-bar">
-                    <input type="text" id="location-input" placeholder="Search city or lat,lon..." />
+                    <div class="location-input-wrap">
+                        <input type="text" id="location-input" placeholder="Search city or lat,lon..." autocomplete="off" />
+                        <div id="location-suggestions" class="location-suggestions" style="display:none"></div>
+                    </div>
                     <button id="locate-btn" title="Use my location">📍</button>
                 </div>
             </div>

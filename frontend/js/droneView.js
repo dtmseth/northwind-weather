@@ -21,17 +21,13 @@ window.renderDroneView = function(hourlyData, droneModel = 'mid') {
     let maxGustWind = 0;
 
     // Find max sustained and gust wind speeds from hourlyData
-    // Assuming hourlyData entries have 'wind_speed_ms' and 'wind_gust_ms'
-    // For simplicity, we are considering all hourlyData for max wind,
-    // as "golden hour windows and daylight hours" require more context (e.g., sunrise/sunset times)
-    // than available in the prompt or typical hourly weather data without location/date.
     if (hourlyData && hourlyData.length > 0) {
         hourlyData.forEach(hour => {
-            if (hour.wind_speed_ms > maxSustainedWind) {
-                maxSustainedWind = hour.wind_speed_ms;
+            if (hour.wind_speed_10m > maxSustainedWind) {
+                maxSustainedWind = hour.wind_speed_10m;
             }
-            if (hour.wind_gust_ms > maxGustWind) {
-                maxGustWind = hour.wind_gust_ms;
+            if (hour.wind_gusts_10m > maxGustWind) {
+                maxGustWind = hour.wind_gusts_10m;
             }
         });
     }

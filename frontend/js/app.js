@@ -46,11 +46,58 @@ function initApp() {
         diag('fetchAndRender START');
         fetchAndRender(currentLat, currentLon);
 
-        // Step 3: Location input
+        // Step 3: Location input with autocomplete
         var locInput = document.getElementById('location-input');
-        if (locInput) {
+        var suggestionsEl = document.getElementById('location-suggestions');
+        var suggestTimer = null;
+
+        function hideSuggestions() {
+            if (suggestionsEl) suggestionsEl.style.display = 'none';
+        }
+
+        function selectSuggestion(result) {
+            locInput.value = '';
+            hideSuggestions();
+            document.getElementById('today-location').textContent = result.name;
+            onLocationChange(result.lat, result.lon);
+        }
+
+        if (locInput && suggestionsEl) {
+            locInput.addEventListener('input', function() {
+                clearTimeout(suggestTimer);
+                var q = this.value.trim();
+                if (!q || q.length < 2) { hideSuggestions(); return; }
+
+                // Check for lat,lon shortcut
+                var parts = q.split(',').map(function(s) { return parseFloat(s.trim()); });
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                    hideSuggestions();
+                    return;
+                }
+
+                suggestTimer = setTimeout(function() {
+                    geocodeSuggestions(q).then(function(results) {
+                        suggestionsEl.innerHTML = '';
+                        if (!results || results.length === 0) { hideSuggestions(); return; }
+                        results.forEach(function(r) {
+                            var item = document.createElement('div');
+                            item.className = 'location-suggestion-item';
+                            item.textContent = r.name;
+                            item.addEventListener('mousedown', function(e) {
+                                e.preventDefault();
+                                selectSuggestion(r);
+                            });
+                            suggestionsEl.appendChild(item);
+                        });
+                        suggestionsEl.style.display = 'block';
+                    }).catch(function() { hideSuggestions(); });
+                }, 300);
+            });
+
             locInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
+                    clearTimeout(suggestTimer);
+                    hideSuggestions();
                     var q = this.value.trim();
                     if (!q) return;
                     var parts = q.split(',').map(function(s) { return parseFloat(s.trim()); });
@@ -68,7 +115,14 @@ function initApp() {
                         }
                         document.getElementById('loading').style.display = 'none';
                     });
+                } else if (e.key === 'Escape') {
+                    hideSuggestions();
                 }
+            });
+
+            locInput.addEventListener('blur', function() {
+                // Delay so mousedown on suggestion fires first
+                setTimeout(hideSuggestions, 150);
             });
         }
 

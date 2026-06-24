@@ -109,6 +109,38 @@ body {
 
 #location-input:focus { border-color: var(--accent-blue); }
 
+.location-input-wrap {
+    position: relative;
+}
+
+.location-suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    z-index: 1000;
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.location-suggestion-item {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.location-suggestion-item:last-child { border-bottom: none; }
+.location-suggestion-item:hover { background: var(--bg-card-hover); }
+
 #locate-btn {
     background: var(--bg-card);
     border: 1px solid var(--border);
