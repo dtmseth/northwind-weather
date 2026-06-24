@@ -265,11 +265,12 @@ def _compute_cloud_score(
 
 def _detect_storms(hourly: list[dict], sun: dict) -> dict:
     """Detect storm photo opportunities."""
-    storm_codes = {95, 96, 99}
+    storm_codes = {80, 81, 82, 85, 86, 95, 96, 99}
     for h in hourly:
         wc = h.get("weather_code")
         cc = h.get("cloud_cover", 50) or 50
         cape = h.get("cape", 0) or 0
+        lifted_index = h.get("lifted_index", 0) or 0
 
         if wc in storm_codes:
             # Isolated (cloud cover < 65) or widespread
@@ -278,15 +279,20 @@ def _detect_storms(hourly: list[dict], sun: dict) -> dict:
                 "score": 10 if is_isolated else 5,
                 "type": "isolated_storm_clear_breaks" if is_isolated else "widespread_storm",
                 "hour": h.get("hour"),
+                "cape": cape,
+                "lifted_index": lifted_index,
             }
-        elif cape > 1500 and cc < 65:
+        elif cape > 1000:
+            is_isolated = cc < 65
             return {
-                "score": 8,
-                "type": "unstable_air_clear_breaks",
+                "score": 8 if is_isolated else 4,
+                "type": "unstable_air_clear_breaks" if is_isolated else "unstable_air_widespread_clouds",
                 "hour": h.get("hour"),
+                "cape": cape,
+                "lifted_index": lifted_index,
             }
 
-    return {"score": 0, "type": "none", "hour": None}
+    return {"score": 0, "type": "none", "hour": None, "cape": 0, "lifted_index": 0}
 
 
 def _predict_red_sun(
@@ -296,8 +302,16 @@ def _predict_red_sun(
     if not aqi_data or "hourly" not in aqi_data:
         return {"morning": False, "evening": False}
 
-    aod_vals = aqi_data["hourly"].get("aerosol_optical_depth", [])
-    aod_max = max(aod_vals) if aod_vals else 0
+    # Scope AOD to the specific day being scored
+    aq_hourly = aqi_data["hourly"]
+    aod_vals = aq_hourly.get("aerosol_optical_depth", [])
+    aod_times = aq_hourly.get("time", [])
+
+    day_aod_vals = [
+        v for i, v in enumerate(aod_vals)
+        if i < len(aod_times) and aod_times[i].startswith(date_str) and v is not None
+    ]
+    aod_max = max(day_aod_vals) if day_aod_vals else 0
 
     if aod_max < 0.3:
         return {"morning": False, "evening": False}

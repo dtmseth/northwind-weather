@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "northwind",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd backend && .venv/bin/uvicorn main:app --port 8099"],
+      "port": 8099
+    }
+  ]
+}

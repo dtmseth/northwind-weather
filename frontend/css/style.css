@@ -39,7 +39,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: max(16px, env(safe-area-inset-top)) 16px 16px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 20px;
     flex-wrap: wrap;
@@ -307,18 +307,9 @@ body {
 }
 
 .timeline-bar {
-    height: 40px;
+    height: 24px;
     border-radius: var(--radius);
     position: relative;
-    background: linear-gradient(to right,
-        #0a0a2e 0%, #0a0a2e 20%,
-        #1a1a5e 20%, #1a1a5e 23%,
-        #ffd700 23%, #ffd700 27%,
-        #87CEEB 27%, #87CEEB 73%,
-        #ffd700 73%, #ffd700 77%,
-        #1a1a5e 77%, #1a1a5e 80%,
-        #0a0a2e 80%, #0a0a2e 100%
-    );
     overflow: hidden;
     margin-bottom: 4px;
 }
@@ -341,9 +332,6 @@ body {
 }
 
 .timeline-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 8px;
     margin-top: 8px;
     font-size: 13px;
 }
@@ -744,6 +732,7 @@ body {
 .footer {
     text-align: center;
     padding: 24px 0;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
     font-size: 12px;
     color: var(--text-muted);
     border-top: 1px solid var(--border);
