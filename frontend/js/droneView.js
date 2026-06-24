@@ -4,14 +4,12 @@ window.renderDroneView = function(hourlyData, droneModel = 'mid') {
     // In a real application, this would be imported from utils.js.
     function droneLimits(model) {
         switch (model) {
-            case 'mini':
-                return { sustained: 10.7, gust: 15 }; // m/s
-            case 'mid':
-                return { sustained: 12, gust: 17 }; // m/s
-            case 'pro':
-                return { sustained: 15, gust: 20 }; // m/s
-            default:
-                return { sustained: 12, gust: 17 }; // Default to 'mid'
+            case 'mini': return { sustained: 10.7, gust: 15 };
+            case 'mini-pro': return { sustained: 10.7, gust: 15 };
+            case 'mid': return { sustained: 12, gust: 17 };
+            case 'pro': return { sustained: 15, gust: 20 };
+            case 'fpv': return { sustained: 8.9, gust: 13.4 };
+            default: return { sustained: 12, gust: 17 };
         }
     }
 

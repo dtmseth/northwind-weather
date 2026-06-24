@@ -89,8 +89,10 @@ const MOON_ICONS = {
 function droneLimits(model) {
     switch (model) {
         case 'mini': return { sustained: 10.7, gust: 15 };
+        case 'mini-pro': return { sustained: 10.7, gust: 15 };
         case 'mid': return { sustained: 12, gust: 17 };
         case 'pro': return { sustained: 15, gust: 20 };
+        case 'fpv': return { sustained: 8.9, gust: 13.4 };
         default: return { sustained: 12, gust: 17 };
     }
 }

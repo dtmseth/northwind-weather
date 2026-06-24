@@ -13,7 +13,7 @@ window.renderClouds = function(metarData, hourlyData, containerId = "cloud-diagr
     if (cloudSourceElement) cloudSourceElement.textContent = '';
     if (cloudLegendElement) cloudLegendElement.innerHTML = '';
 
-    const diagramHeight = container.clientHeight; // Should be 100px based on requirements
+    const diagramHeight = 150; // matches .cloud-diagram CSS height
     const MAX_ALTITUDE_FT = 15000; // 100% of height for 15000ft+
 
     if (metarData && metarData.clouds && metarData.clouds.length > 0) {

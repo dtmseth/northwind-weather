@@ -377,7 +377,7 @@ body {
 /* Cloud Diagram */
 .cloud-diagram {
     position: relative;
-    height: 100px;
+    height: 150px;
     background: linear-gradient(to bottom, #1a1a3e 0%, #2a2a4e 60%, #3a3a5e 100%);
     border-radius: var(--radius-sm);
     overflow: hidden;
@@ -386,7 +386,7 @@ body {
 
 .cloud-layer {
     position: absolute;
-    bottom: 0;
+    height: 18px;
     border-radius: 6px;
     transition: all 0.3s;
 }
@@ -400,6 +400,8 @@ body {
     font-weight: 600;
     white-space: nowrap;
     pointer-events: none;
+    color: var(--text-primary);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
 }
 
 .cloud-layer .type-label {
